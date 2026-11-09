@@ -1,0 +1,9 @@
+workloads:
+  playlistbridge:
+    replicaCount: 1
+
+userspace:
+  appData: /Data
+  permission: readWrite
+
+olaresEnv: {}

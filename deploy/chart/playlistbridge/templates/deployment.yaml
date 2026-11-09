@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlistbridge
+  labels:
+    app: playlistbridge
+spec:
+  replicas: {{ .Values.workloads.playlistbridge.replicaCount }}
+  selector:
+    matchLabels:
+      app: playlistbridge
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: playlistbridge
+    spec:
+      containers:
+        - name: playlistbridge
+          image: ghcr.io/bayerhazard/playlistbridge:26.11.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PB_DB
+              value: /Data/playlistbridge.db
+          volumeMounts:
+            - name: appdata
+              mountPath: /Data
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+      volumes:
+        - name: appdata
+          hostPath:
+            path: {{ .Values.userspace.appData }}
+            type: DirectoryOrCreate

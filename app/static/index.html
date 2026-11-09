@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playlist Bridge</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="kopf">
+    <div class="kopf-inner">
+      <div class="marke" aria-hidden="true">PB</div>
+      <div>
+        <h1>Playlist Bridge</h1>
+        <p class="unter">Spotify-Playlists nach TIDAL umziehen</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="karte" aria-labelledby="verbinden-titel">
+      <div class="karte-kopf">
+        <h2 id="verbinden-titel">1. Konten verbinden</h2>
+        <span class="hinweis">Zugangsdaten bleiben auf deinem Olares.</span>
+      </div>
+      <div class="verbindungen">
+        <div class="verbindung">
+          <div>
+            <div class="name">Spotify</div>
+            <div class="status" id="spotify-status"><span class="punkt"></span> nicht verbunden</div>
+          </div>
+          <button type="button" id="spotify-verbinden">Verbinden</button>
+        </div>
+        <div class="verbindung">
+          <div>
+            <div class="name">TIDAL</div>
+            <div class="status" id="tidal-status"><span class="punkt"></span> nicht verbunden</div>
+          </div>
+          <button type="button" id="tidal-verbinden">Verbinden</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="karte" aria-labelledby="zugang-titel">
+      <div class="karte-kopf">
+        <h2 id="zugang-titel">2. API-Zugangsdaten</h2>
+        <span class="hinweis">Client-IDs aus deinen Developer-Apps.</span>
+      </div>
+      <form id="einstellungen" class="form-raster" autocomplete="off">
+        <div class="feld">
+          <label for="spotify_client_id">Spotify Client-ID</label>
+          <input type="text" id="spotify_client_id" name="spotify_client_id" spellcheck="false" />
+        </div>
+        <div class="feld">
+          <label for="spotify_client_secret">Spotify Client-Secret <span class="opt">(optional bei PKCE)</span></label>
+          <input type="password" id="spotify_client_secret" name="spotify_client_secret" spellcheck="false" />
+        </div>
+        <div class="feld">
+          <label for="tidal_client_id">TIDAL Client-ID</label>
+          <input type="text" id="tidal_client_id" name="tidal_client_id" spellcheck="false" />
+        </div>
+        <div class="feld">
+          <label for="tidal_client_secret">TIDAL Client-Secret <span class="opt">(falls von TIDAL vergeben)</span></label>
+          <input type="password" id="tidal_client_secret" name="tidal_client_secret" spellcheck="false" />
+        </div>
+        <div class="feld">
+          <label for="country_code">Markt / Land</label>
+          <input type="text" id="country_code" name="country_code" maxlength="2" placeholder="DE" spellcheck="false" />
+        </div>
+        <div class="feld">
+          <label for="public_base_url">Öffentliche Basis-URL <span class="opt">(optional)</span></label>
+          <input type="text" id="public_base_url" name="public_base_url" placeholder="automatisch" spellcheck="false" />
+        </div>
+        <div class="feld voll redirect" aria-label="Weiterleitungs-URLs">
+          <p>Diese Redirect-URIs musst du in den Developer-Apps eintragen:</p>
+          <div>
+            <label>Spotify</label>
+            <code id="ru-spotify">–</code>
+          </div>
+          <div>
+            <label>TIDAL</label>
+            <code id="ru-tidal">–</code>
+          </div>
+        </div>
+        <div class="knoepfe voll">
+          <button type="submit" id="speichern">Zugangsdaten speichern</button>
+          <button type="button" class="leise" id="kopieren">Redirect-URIs kopieren</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="karte" aria-labelledby="playlist-titel">
+      <div class="karte-kopf">
+        <h2 id="playlist-titel">3. Playlist umziehen</h2>
+        <span class="hinweis">Zuerst eine Vorschau, dann übertragen.</span>
+      </div>
+      <div class="form-raster">
+        <div class="feld voll">
+          <label for="playlist">Spotify-Playlist</label>
+          <select id="playlist"><option value="">Erst Spotify verbinden …</option></select>
+        </div>
+        <div class="feld">
+          <label for="name">TIDAL-Name <span class="opt">(leer = Spotify-Name)</span></label>
+          <input type="text" id="name" />
+        </div>
+        <div class="feld">
+          <label for="access_type">Sichtbarkeit</label>
+          <select id="access_type">
+            <option value="UNLISTED">Privat (nicht gelistet)</option>
+            <option value="PUBLIC">Öffentlich</option>
+          </select>
+        </div>
+        <div class="feld voll">
+          <label for="description">Beschreibung <span class="opt">(optional)</span></label>
+          <input type="text" id="description" />
+        </div>
+      </div>
+      <div class="knoepfe">
+        <button type="button" class="primär" id="starten">Nach TIDAL übertragen</button>
+        <button type="button" id="vorschau">Vorschau (Abgleich)</button>
+        <button type="button" class="leise" id="aktualisieren">Playlists neu laden</button>
+      </div>
+      <div class="fortschritt" id="fortschritt" hidden>
+        <div class="balken"><i id="balken"></i></div>
+        <p class="meldung" id="meldung" role="status" aria-live="polite"></p>
+      </div>
+      <div class="ergebnis" id="ergebnis" hidden></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

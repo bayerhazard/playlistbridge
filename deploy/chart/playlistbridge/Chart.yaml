@@ -1,0 +1,5 @@
+apiVersion: v2
+description: Migrate Spotify playlists to TIDAL
+name: playlistbridge
+version: 26.11.1
+appVersion: 26.11.1

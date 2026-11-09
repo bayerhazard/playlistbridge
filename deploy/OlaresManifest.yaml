@@ -1,0 +1,60 @@
+olaresManifest.version: '0.12.0'
+olaresManifest.type: app
+apiVersion: 'v3'
+
+workloadReplicas:
+  playlistbridge: 1
+
+metadata:
+  name: playlistbridge
+  appid: playlistbridge
+  icon: https://raw.githubusercontent.com/bayerhazard/playlistbridge/main/deploy/icon.png
+  title: Playlist Bridge
+  version: '26.11.1'
+  categories:
+    - Applications
+  description: Move Spotify playlists to TIDAL with ISRC matching.
+
+spec:
+  versionName: '26.11.1'
+  fullDescription: >
+    Playlist Bridge copies your Spotify playlists to TIDAL. Connect both
+    accounts via OAuth, preview the track matching (ISRC first, then search),
+    and create a TIDAL playlist from the matched tracks. Client credentials and
+    tokens stay on your Olares device and are never sent anywhere else.
+  upgradeDescription: "v26.11.1: Erste Version. Spotify -> TIDAL Playlist-Migration mit ISRC-Abgleich, Vorschau und lokalem Token-Speicher. Built for Olares 1.12.6."
+  developer: Aimighty
+  website: ''
+  sourceCode: https://github.com/bayerhazard/playlistbridge
+  locale:
+    - en-US
+  supportArch:
+    - amd64
+  requiredCpu: '1'
+  limitedCpu: '2'
+  requiredMemory: 512Mi
+  limitedMemory: 1Gi
+  requiredDisk: 5Gi
+  requiredGpu: '0'
+
+entrances:
+  - name: playlistbridge
+    port: 8080
+    host: playlistbridge
+    title: Playlist Bridge
+    authLevel: internal
+    invisible: false
+    openMethod: window
+
+permission:
+  appData: true
+
+envs: []
+
+options:
+  apiTimeout: 0
+  allowMultipleInstall: false
+  dependencies:
+    - name: olares
+      version: '>=1.12.6-0'
+      type: system

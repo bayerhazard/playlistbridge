@@ -1,0 +1,9 @@
+.git
+__pycache__
+*.pyc
+.venv
+node_modules
+deploy
+data
+*.db
+*.log

@@ -18,31 +18,69 @@ spec:
     spec:
       containers:
         - name: playlistbridge
-          image: ghcr.io/bayerhazard/playlistbridge:26.11.1
-          imagePullPolicy: Always
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          workingDir: /srv
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              pip install --no-cache-dir --disable-pip-version-check fastapi==0.115.6 "uvicorn[standard]==0.34.0" requests==2.32.3
+              exec uvicorn app.main:asgi_app --host 0.0.0.0 --port 8080
           ports:
             - containerPort: 8080
               protocol: TCP
           env:
             - name: PB_DB
               value: /Data/playlistbridge.db
+            - name: PYTHONUNBUFFERED
+              value: "1"
           volumeMounts:
             - name: appdata
               mountPath: /Data
+            - name: code
+              mountPath: /srv/app
+              readOnly: true
           readinessProbe:
             httpGet:
               path: /api/health
               port: 8080
-            initialDelaySeconds: 5
+            initialDelaySeconds: 20
             periodSeconds: 15
           livenessProbe:
             httpGet:
               path: /api/health
               port: 8080
-            initialDelaySeconds: 15
+            initialDelaySeconds: 40
             periodSeconds: 30
       volumes:
         - name: appdata
           hostPath:
             path: {{ .Values.userspace.appData }}
             type: DirectoryOrCreate
+        - name: code
+          configMap:
+            name: playlistbridge-code
+            items:
+              - key: __init__.py
+                path: __init__.py
+              - key: main.py
+                path: main.py
+              - key: store.py
+                path: store.py
+              - key: spotify.py
+                path: spotify.py
+              - key: tidal.py
+                path: tidal.py
+              - key: migrate.py
+                path: migrate.py
+              - key: index.html
+                path: static/index.html
+              - key: app.js
+                path: static/app.js
+              - key: style.css
+                path: static/style.css
+              - key: Geist-Variable.woff2
+                path: static/fonts/Geist-Variable.woff2
+              - key: GeistMono-Variable.woff2
+                path: static/fonts/GeistMono-Variable.woff2

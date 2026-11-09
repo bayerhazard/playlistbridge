@@ -2,6 +2,10 @@ workloads:
   playlistbridge:
     replicaCount: 1
 
+image:
+  repository: python
+  tag: "3.12-slim"
+
 userspace:
   appData: /Data
   permission: readWrite

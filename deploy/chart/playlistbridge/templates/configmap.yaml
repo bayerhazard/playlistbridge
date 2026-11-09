@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: playlistbridge-code
+  labels:
+    app: playlistbridge
+data:
+  __init__.py: |
+{{ .Files.Get "files/__init__.py" | indent 4 }}
+  main.py: |
+{{ .Files.Get "files/main.py" | indent 4 }}
+  store.py: |
+{{ .Files.Get "files/store.py" | indent 4 }}
+  spotify.py: |
+{{ .Files.Get "files/spotify.py" | indent 4 }}
+  tidal.py: |
+{{ .Files.Get "files/tidal.py" | indent 4 }}
+  migrate.py: |
+{{ .Files.Get "files/migrate.py" | indent 4 }}
+  index.html: |
+{{ .Files.Get "files/index.html" | indent 4 }}
+  app.js: |
+{{ .Files.Get "files/app.js" | indent 4 }}
+  style.css: |
+{{ .Files.Get "files/style.css" | indent 4 }}
+binaryData:
+  Geist-Variable.woff2: {{ .Files.Get "files/Geist-Variable.woff2.b64" | trim | quote }}
+  GeistMono-Variable.woff2: {{ .Files.Get "files/GeistMono-Variable.woff2.b64" | trim | quote }}
